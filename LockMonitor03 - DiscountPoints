@@ -1,0 +1,36 @@
+/* Triggers ERROR pop up message if both Loan Discount Points and Lender Paid Origination charges are completed */
+
+/*  802 Borrower Amount is Discount Points in Line 802.
+    802 Seller Amount is Discount Points in Line 802 on the Others column - Lender.
+    YSPAmount2 is Lender Credit dollar amount. */
+
+{ev.Cancel = ( 
+  ( ( los.GetField("CC802.BorrowerAmount") != null )
+    && ( los.GetField("Loan.YSPAmount2") != null ) )
+
+  || ( (los.GetField("CC802.SellerAmount") != null)    /* Discount Points paid by Lender */
+    && (los.GetField("CC802.PaidByOtherType") == "1")  
+    && (los.GetField("Loan.YSPAmount2") != null) )
+
+  || ( (los.GetField("CC813.SellerAmount") != null)    /* Lender Fee paid by Lender */
+    && (los.GetField("CC813.PaidByOtherType") == "1")  
+    && (los.GetField("Loan.YSPAmount2") != null) )
+
+  || ( (los.GetField("CC801.SellerAmount") != null)    /* LO Fee paid by Lender */
+    && (los.GetField("CC801.PaidByOtherType") == "1")  
+    && (los.GetField("Loan.YSPAmount2") != null) )
+
+  || ( (los.GetField("CC808.SellerAmount") != null)    /* Broker Fee paid by Lender */
+    && (los.GetField("CC808.PaidByOtherType") == "1")  
+    && (los.GetField("Loan.YSPAmount2") != null) )
+
+  || ( (los.GetField("CC803.SellerAmount") != null)    /* Originator Compensation Fee paid by Lender */
+    && (los.GetField("CC803.PaidByOtherType") == "1")  
+    && (los.GetField("Loan.YSPAmount2") != null) )
+
+  || ( (los.GetField("CC811.SellerAmount") != null)    /* Underwriting Fee paid by Lender */
+    && (los.GetField("CC811.PaidByOtherType") == "1")  
+    && (los.GetField("Loan.YSPAmount2") != null) )
+
+ )
+}
