@@ -1,4 +1,4 @@
-/* WFUW016A:  Prevent Approved Status from updating */
+/* WFUW016A:  Prevent Approved Status from updating - RETAIL FILES */
 
 
 if ((los.GetField("FileData.OriginationChannel") == "1") /* Retail */){
