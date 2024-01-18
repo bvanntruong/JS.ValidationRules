@@ -1,0 +1,22 @@
+/* WFUW024 : Completed Tasks, Trigger Change in Status */
+
+/* Pulling Task.DateCompleted and Task.Description. It's hidden in field picker. */
+
+var TaskCount = ev.File.GetCollectionCount("Task")
+if (TaskCount>0){
+ var TaskHistory = ev.File.GetCollectionObject("Task", TaskCount);
+ var DateCompleted = TaskHistory.GetField("DateCompleted");
+ los.SetField("ExtendedFields.TaskDateCompleted", DateCompleted);
+ var TaskDescription = TaskHistory.GetField("Description");
+ los.SetField("ExtendedFields.TaskDescription", TaskDescription)
+}
+
+
+/* If tasks completed, trigger status change. */
+
+if ( (ev.TableAndFieldName=="ExtendedFields.TaskDateCompleted")
+ && (los.GetField("ExtendedFields.TaskDescription") == "COC - Secondary Review")
+ && (los.GetField("ExtendedFields.TaskDateCompleted") != "") ) {
+ los.SetField( "Status.CustomStatus8Date", (los.GetField("ExtendedFields.TaskDateCompleted")) )
+}
+
