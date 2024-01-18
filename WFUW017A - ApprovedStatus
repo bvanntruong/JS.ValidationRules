@@ -1,0 +1,23 @@
+/* WFUW017a- Prevent Approved Status from updating - WHOLESALE FILES */
+
+
+if ((los.GetField("FileData.OriginationChannel") == "3") /* Wholesale */){
+
+
+try {
+    var OldStatus = ev.OldStatusName.toString();
+    var NewStatus = ev.NewStatusName.toString();
+    var OriginalApprovedDate = los.GetField("ExtendedFields.OriginalApprovedDate");
+
+    if (OldStatus == "In Underwriting" && NewStatus == "Approved") {
+        los.SetField("Status.ApprovedDate", OriginalApprovedDate);
+    };
+}
+
+
+catch (err) {
+    los.Application.ShowMessageBox("Error : " + err);
+}
+
+
+}
