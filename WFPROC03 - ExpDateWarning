@@ -1,0 +1,42 @@
+/* Validation Rule Warning : WFPROC03 */
+
+/* Extended fields : 
+    CreditExpDate, PayoffExpDate, IncomeExpDate, AssetExpDate, PurchContCOEDate, PrelimExpDate, 
+    AppraisalExpDate, Appraisal2ExpDate, CPLExpDate, HazRenewalDate, FloodRenewalDate, HOAInsPolicyRenewalDate, CreditRefreshExpDate, 
+    VVOEB1ExpDate, VVOEB2ExpDate, DocNeeded1ExpDate, DocNeeded2ExpDate, DocNeeded3ExpDate
+*/
+
+/* There is an expiration date that has expired or will expire within the next 5 days. Please review the expiration dates on the Processing Checklist and adjust if needed. */
+
+var today = new Date();
+var todayPlus5 = today;
+todayPlus5.setDate(today.getDate() + 5);
+todayPlus5.toDateString();
+
+function formatDate(date) {
+return date.getMonth()+1 + '/' + date.getDate() + '/' + date.getFullYear();
+};
+
+formatDate(todayPlus5);
+
+{ev.Cancel = 
+ ( los.GetField("ExtendedFields.CreditExpDate")  
+ || los.GetField("ExtendedFields.PayoffExpDate") 
+ || los.GetField("ExtendedFields.IncomeExpDate") 
+ || los.GetField("ExtendedFields.AssetExpDate") 
+ || los.GetField("ExtendedFields.PurchContCOEDate") 
+ || los.GetField("ExtendedFields.PrelimExpDate") 
+ || los.GetField("ExtendedFields.AppraisalExpDate") 
+ || los.GetField("ExtendedFields.Appraisal2ExpDate") 
+ || los.GetField("ExtendedFields.CPLExpDate") 
+ || los.GetField("Party.HazRenewalDate") 
+ || los.GetField("Party.FloodRenewalDate") 
+ || los.GetField("ExtendedFields.HOAInsPolicyRenewalDate") 
+ || los.GetField("ExtendedFields.CreditRefreshExpDate") 
+ || los.GetField("ExtendedFields.VVOEB1ExpDate") 
+ || los.GetField("ExtendedFields.VVOEB2ExpDate") 
+ || los.GetField("ExtendedFields.DocNeeded1ExpDate") 
+ || los.GetField("ExtendedFields.DocNeeded2ExpDate") 
+ || los.GetField("ExtendedFields.DocNeeded3ExpDate") )
+ < todayPlus5
+}
