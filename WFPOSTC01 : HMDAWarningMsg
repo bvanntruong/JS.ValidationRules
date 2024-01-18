@@ -1,0 +1,10 @@
+/* WFPOSTC01 : Exclude From HMDA Warning Message */
+
+/* When opening the HMDA Screen, a pop up warning message will show if the Exclude From HMDA box is marked. */
+
+
+if ( (ev.ScreenName=="HMDA")
+ && (los.GetField("Loan.ExcludeFromHMDA") == true) ){
+ los.Application.ShowMessageBox("The Exclude From HMDA box is marked. HMDA Screen does not apply. ");
+// ev.Cancel = true;
+}
