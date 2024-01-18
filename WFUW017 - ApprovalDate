@@ -1,0 +1,34 @@
+/* WFUW017 - Preserve Approval Date  */
+
+if ((los.GetField("FileData.OriginationChannel") == "3") /* Wholesale */){
+
+
+try {
+    var OldStatus = ev.OldStatusName.toString();
+    var NewStatus = ev.NewStatusName.toString();
+    var ApprovedDate = los.GetField("Status.ApprovedDate");
+    var OriginalApprovedDate = los.GetField("ExtendedFields.OriginalApprovedDate");
+
+if (OldStatus == "In Underwriting" && NewStatus == "Approved") 
+{
+
+if (OriginalApprovedDate == null) 
+{
+         los.SetField("ExtendedFields.OriginalApprovedDate", ApprovedDate);
+}
+else {
+     los.SetField("Status.ApprovedDate", OriginalApprovedDate);
+ }
+
+};
+
+
+}
+
+catch(err)
+{  los.Application.ShowMessageBox("Error : " + err);
+}
+
+}
+
+
