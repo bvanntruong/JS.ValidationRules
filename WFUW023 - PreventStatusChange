@@ -1,0 +1,24 @@
+/ * WFUW023 : Incomplete Tasks, Cannot Change Status */
+
+/* Pulling Task.DateCompleted and Task.Description. It's hidden in field picker. */
+var TaskCount = ev.File.GetCollectionCount("Task")
+if (TaskCount>0){
+ var TaskHistory = ev.File.GetCollectionObject("Task", TaskCount);
+ var DateCompleted = TaskHistory.GetField("DateCompleted");
+ los.SetField("ExtendedFields.TaskDateCompleted", DateCompleted);
+ var TaskDescription = TaskHistory.GetField("Description");
+ los.SetField("ExtendedFields.TaskDescription", TaskDescription)
+}
+
+/* Prevent status change to COC Review if Secondary Review or Relock Request tasks are incomplete. */
+
+if ((los.GetField("Status.LoanStatus") == "58") /* COC Review */ 
+ && (los.GetField("ExtendedFields.TaskDateCompleted") == "")) {
+ if ((los.GetField("ExtendedFields.TaskDescription") == "COC - Secondary Review") 
+  || (los.GetField("ExtendedFields.TaskDescription") == "COC - Relock Request")) {
+  MessageBox.Show("Please complete the assigned tasks prior to changing the status to COC Review.");
+  ev.Cancel = true;
+  }
+ };
+
+
