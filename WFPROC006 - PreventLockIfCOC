@@ -1,0 +1,11 @@
+/* WFPROC006 : Prevent Lock if COC Review Status */
+
+if (ev.TableAndFieldName=="Loan.LockStartDate") {
+
+ if (los.GetField("Status.LoanStatus") == "58") /* COC Review */ {
+ los.Application.ShowMessageBox("Unable to lock loan in COC Review Status.");
+ ev.Cancel=true;
+ }
+
+};
+
