@@ -1,0 +1,55 @@
+/* WFORIG005 : Residence history is less than 2 years */
+
+/* Prevent status change to Submit to UW if residence history is 0-2 years and display message accordingly. */
+
+var statusName = "Submitted to UW";
+
+var Offset = 0;
+var file = ev.File;
+var borCount = file.GetCollectionCount("Borrower");
+
+for (var a = 1; a <= borCount; a++)
+{
+  var bor = "Bor" + (a + Offset);
+  if (file.DoesChildObjectExist(bor) == true)
+  {
+    var borrower = file.GetChildObject(bor,false);
+    var FormerRes = borrower.GetCollectionCount("FormerResidence");
+    var ResNoYears = bor + "Res.NoYears";
+    var ResYear = los.GetField(ResNoYears);
+    if (ResYear == undefined)
+      ResYear = 0;
+    var ResNoMonths = bor + "Res.NoMonths";
+    var ResMonth = los.GetField(ResNoMonths);
+    if (ResMonth == undefined)
+      ResMonth = 0;
+    for (var i = 1; i <= FormerRes; i++)
+    {
+      var OldRes = borrower.GetCollectionObject("FormerResidence", i);
+      if(OldRes.GetField("NoYears") != undefined)
+        ResYear = ResYear + OldRes.GetField("NoYears");
+      if(OldRes.GetField("NoMonths") != undefined)
+        ResMonth = ResMonth + OldRes.GetField("NoMonths");
+    }
+    ResYear = (ResYear * 12) + ResMonth;
+    if ((ResYear == 0) &&
+     (ev.NewStatusName == statusName))
+    {
+      MessageBox.Show(los.GetField(bor+".FullName") + " has no residence history.  Cannot update status to 'Submitted to UW'.");
+      ev.Cancel = true;
+    }
+    else
+    if ((ResYear < 24) &&
+     (ev.NewStatusName == statusName))
+    {
+      MessageBox.Show(los.GetField(bor+".FullName") + " shows less than 2 years residence history. Cannot update status to 'Submitted to UW'.");
+      ev.Cancel = true;
+    }
+  }
+  else
+  {
+    Offset ++;
+    a --;
+  }
+}
+
