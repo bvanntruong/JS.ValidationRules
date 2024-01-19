@@ -1,0 +1,37 @@
+/* WFUW021 : Count of Open PTD Conditions */
+
+/* Displayed on Underwriting Screen to track conditions still open at Prior to Docs status. 
+    For account managers and underwriters to resolve prior to being tasked to funding department. */
+
+if (ev.ScreenName=="Conditions") {  
+ const PRIORTODOCS = 1; 
+ var PtdOpen = 0;
+ var PtdCleared = 0;
+ var PtdTotal = 0;
+
+ var ConditionCount = ev.File.GetCollectionCount("Condition");
+
+ for (var i=1; i<= ConditionCount; i++) {
+  var Condition = ev.File.GetCollectionObject("Condition", i);
+  var ConditionStage = Condition.GetField("ConditionStage");
+  var ConditionClearedDate = Condition.GetField("ClearedDate");
+  switch (ConditionStage) {
+   case PRIORTODOCS:
+    PtdTotal++;
+    if(ConditionClearedDate != null){
+     PtdCleared++;
+     }
+    else {
+     PtdOpen++;
+     }
+  break;
+  }
+ }
+
+los.SetField("ExtendedFields.UWPtdTotal", PtdTotal)
+los.SetField("ExtendedFields.UWPtdCleared", PtdCleared)
+los.SetField("ExtendedFields.UWPtdOpen", PtdOpen)
+
+};
+
+
