@@ -1,0 +1,57 @@
+/* WFORIG007 : Employment History is less than 2 years */
+
+/* Retrieve all borrowers and loop through them, checking number of employed months. Ensure date started exists and borrower ID matches. 
+    Prevent status change to Submitted to UW if employment history is less than 24 months. */
+ 
+var statusName = "Submitted to UW";
+
+//Get the number of borrowers on the loan file
+var borCount = ev.File.GetCollectionCount("Borrower");
+
+//loop through borrowers 
+for (var a = 1; a <= borCount; a++) {
+  var CurrEmpTime = 0
+  var borObj = ev.File.GetCollectionObject("Borrower", a);
+  var borId = borObj.GetField("BorrowerID")
+  //Call employer fucntion and pass the borrower id, returns the number of months a borrower has worked
+  CurrEmpTime = formerEmployer(borId);
+  var Fullname = borObj.GetField("FullName")
+  //check if borrower has 24 months of work, if not display warning message.
+  if ((CurrEmpTime < 24) &&
+   (ev.NewStatusName == statusName)){
+    MessageBox.Show("WARNING"+"\r\n"+Fullname + " disclosed Employment History less than 2 years.");
+ev.Cancel = true;
+  }
+}
+
+
+function formerEmployer(id) {
+  var formerEmployers = ev.File.GetCollectionCount("Employer");
+  var monthsEmp = 0
+
+  for (var i = 1; i <= formerEmployers; i++) {
+
+    var emp = ev.File.GetCollectionObject("Employer", i);
+    var borID = emp.GetField("BorrowerID")
+    var dateTo = new Date(emp.GetField("DateTo"));
+    var dateFrom = new Date(emp.GetField("DateFrom"));
+
+    //check if date are NaN
+    if (isNaN(dateFrom)) {
+
+      dateFrom = new Date();
+    }
+    if (isNaN(dateTo)) {
+      dateTo = new Date();
+    }
+
+    //check if borrowerID is equal to the borrowerID on the employer table
+    if (id == borID) {
+      monthsEmp += dateTo.getMonth() - dateFrom.getMonth() + (12 * (dateTo.getFullYear() - dateFrom.getFullYear()))
+
+    }
+  }
+  return monthsEmp
+
+}
+
